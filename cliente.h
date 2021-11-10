@@ -5,7 +5,10 @@ class Cliente{
 	
 	public:
 		Cliente();
+		~Cliente();
 		Cliente(std::string ADPI, std::string Anombre, std::string Aapellido, std::string AISBNasociado);
+		
+		int disponible();
 		
 		void setDPI(std::string ADPI);
 		void setNombre(std::string Anombre);
@@ -28,11 +31,23 @@ Cliente::Cliente(){
 	
 }
 
+Cliente::~Cliente(){
+	
+}
+
 Cliente::Cliente(std::string ADPI, std::string Anombre, std::string Aapellido, std::string AISBNasociado){
 	DPI=ADPI;
 	nombre=Anombre;
 	apellido=Aapellido;
 	ISBNasociado=AISBNasociado;
+}
+
+Cliente::disponible(){
+	if(ISBNasociado.length() == 0){
+		return 1;
+	}else{
+		return 0;
+	}
 }
 
 void Cliente::setDPI(std::string ADPI){

@@ -7,7 +7,6 @@
 using namespace std;
 
 struct nodo {
-	
    	string DPI;
 	string nombre;
 	string apellido;	
@@ -15,16 +14,9 @@ struct nodo {
     struct nodo *sig; 
 };
 
+
 struct nodo *raiz=NULL; 
 struct nodo *fondo=NULL; 
-
-typedef struct
-{
-    string DPI;
-	string nombre;
-	string apellido;	
-	string ISBNasociado;
-} Cliente;
 
 int vacia()
 {
@@ -37,7 +29,7 @@ int vacia()
 void insertar(Cliente cliente) 
 {
     struct nodo *nuevo; 
-    nuevo=malloc(sizeof(struct nodo));
+    nuevo= static_cast<struct bstree *>(malloc(sizeof (*nodo)));
     
     nuevo->DPI=cliente.getDPI();
     nuevo->nombre=cliente.getNombre();
