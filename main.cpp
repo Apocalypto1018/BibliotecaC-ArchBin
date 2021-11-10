@@ -12,6 +12,7 @@ void modificarClientePorDPI();
 void borrarCliente();
 
 void catalogoLibro();
+void agregarNuevoLibro();
 
 Cliente clientes[200];
 int nClientes=0;
@@ -296,9 +297,9 @@ void catalogoLibro(){
 		cout<<"       CATALOGO LIBRO"<<endl<<endl<<endl;
 		cout<<"*Ingrese 1 para alta"<<endl<<endl;
 		cout<<"*Ingrese 2 para baja"<<endl<<endl;
-		cout<<"*Ingrese 3 para modificar cliente"<<endl<<endl;
-		cout<<"*Ingrese 4 para ver todos los clientes registrados"<<endl<<endl;
-		cout<<"*Ingrese 5 para ver buscar un cliente por DPI"<<endl<<endl;
+		cout<<"*Ingrese 3 para modificar libro"<<endl<<endl;
+		cout<<"*Ingrese 4 para ver todos los libros registrados"<<endl<<endl;
+		cout<<"*Ingrese 5 para ver buscar un libro por ISBN"<<endl<<endl;
 		cout<<"*Ingrese 0 para SALIR\n->";
 		cin.clear();
 		cin>>opc;
@@ -313,27 +314,27 @@ void catalogoLibro(){
 			}
 			
 			case 1:{
-				agregarNuevoCliente();
+				agregarNuevoLibro();
 				break;
 			}
 			
 			case 2:{
-				borrarCliente();
+				//borrarLibro();
 				break;
 			}
 			
 			case 3:{
-				modificarClientePorDPI();
+				//modificarLibroPorISBN();
 				break;
 			}
 			
 			case 4:{
-				listaDeTodosLosClientes();
+				//listaDeTodosLosLibrosDisponibles();
 				break;
 			}
 			
 			case 5:{
-				buscarClientePorDPI();
+				//listaDeTodosLosLibrosOcupados();
 				break;
 			}
 			
@@ -345,5 +346,30 @@ void catalogoLibro(){
 			}
 		}
 	}while(salir!=1);
+}
+
+void agregarNuevoLibro(){
+	
+	string nombre;
+	string apellido;
+	string dpi;
+
+	//DPI
+	cout<<"*Ingrese el DPI del cliente\n->";
+	cin.clear();
+	cin>>dpi;
+	clientes[nClientes].setDPI(dpi);
+	//nombre
+	cout<<"*Ingrese el NOMBRE del cliente\n->";
+	cin.clear();
+	cin>>nombre;
+	clientes[nClientes].setNombre(nombre);
+	//apellido
+	cout<<"*Ingrese el APPELLIDO del cliente\n->";
+	cin.clear();
+	cin>>apellido;
+	clientes[nClientes].setApellido(apellido);
+	
+	nClientes++;
 }
 
