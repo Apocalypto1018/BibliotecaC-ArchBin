@@ -19,6 +19,8 @@ void listaDeTodosLosLibrosDisponibles();
 void modificarLibroPorISBN();
 void borrarLibro();
 
+void registrarPrestamo();
+
 Cliente clientes[100];
 Libro libros[300];
 int nClientes=0;
@@ -64,7 +66,7 @@ int main(){
 			}
 			
 			case 3:{
-				
+				registrarPrestamo();
 				break;
 			}
 			
@@ -164,6 +166,9 @@ void agregarNuevoCliente(){
 	cin>>apellido;
 	clientes[nClientes].setApellido(apellido);
 	
+	cout<<"*Cliente agregado correctamente\n";
+	system("pause");
+	
 	nClientes++;
 }
 
@@ -251,14 +256,6 @@ void modificarClientePorDPI(){
 			cin.clear();
 			cin>>apellido;
 			clientes[i].setApellido(apellido);
-			//ISBN
-			cout<<"*Ingrese el 1 para dejar el ISBN como esta, o 0 para indicar vacio por defecto\n->";
-			cin.clear();
-			cin>>opc;
-			
-			if(opc==0){
-				clientes[i].setNombre("");
-			}
 			
 			encontrado=true;
 
@@ -382,16 +379,19 @@ void agregarNuevoLibro(){
 	cin>>titulo;
 	libros[nLibros].setTitulo(titulo);
 	
+	cout<<"*Libro agregado correctamente\n";
+	system("pause");
 	nLibros++;
 }
 
 void listaDeTodosLosLibrosOcupados(){
 	
 	for(int i=0;i<nLibros;i++){
-		if(libros[nLibros].disponible()==1){
+		if(libros[i].disponible()==0){
 			cout<<"#Libro: "<<i+1<<endl;
 			cout<<"*ISBN: "<<libros[i].getISBN()<<endl;
 			cout<<"*Titulo: "<<libros[i].getTitulo()<<endl;
+			cout<<"*DPI de cliente asociado: "<<libros[i].getDPIasociado()<<endl;
 		}
 	}
 	
@@ -436,7 +436,7 @@ void borrarLibro(){
 void listaDeTodosLosLibrosDisponibles(){
 	
 	for(int i=0;i<nLibros;i++){
-		if(libros[nLibros].disponible()!=1){
+		if(libros[i].disponible()==1){
 			cout<<"#Libro: "<<i+1<<endl;
 			cout<<"*ISBN: "<<libros[i].getISBN()<<endl;
 			cout<<"*Titulo: "<<libros[i].getTitulo()<<endl;
@@ -470,16 +470,7 @@ void modificarLibroPorISBN(){
 			cin.clear();
 			cin>>titulo;
 			libros[i].setTitulo(titulo);
-			
-			//DPI
-			cout<<"*Ingrese el 1 para dejar el DPI como esta, o 0 para indicar vacio por defecto\n->";
-			cin.clear();
-			cin>>opc;
-			
-			if(opc==0){
-				libros[i].setDPIasociado("");
-			}
-			
+						
 			encontrado=true;
 
 		}
@@ -487,6 +478,82 @@ void modificarLibroPorISBN(){
 	
 	if(!encontrado){
 		cout<<"*El cliente con dpi "<<ISBNBuscar<<" No existe."<<endl<<endl;
+	}
+	
+	system("pause");
+	system("cls");
+}
+
+void registrarPrestamo(){
+	
+	string DPIBuscar;
+	string ISBNBuscar;
+	
+	string dia, mes, anio;
+	
+	bool encontrado=false;
+	bool encontrado2=false;
+	
+	cout<<"*Ingrese el DPI del CLIENTE\n->";
+	cin.clear();
+	cin>>DPIBuscar;
+	
+	system("cls");
+	
+	for(int i=0;i<nClientes;i++){
+		
+		if(DPIBuscar==clientes[i].getDPI()){
+			
+			if(clientes[i].getISBNasociado().length()==0){
+				
+				cout<<"*Ingrese el ISBN del libro que desea rentar\n->";
+				cin.clear();
+				cin>>ISBNBuscar;
+				
+				for(int j=0;j<nLibros;j++){
+					
+					if(ISBNBuscar==libros[i].getISBN()){
+						
+						clientes[i].setISBNasociado(libros[j].getISBN());
+						libros[j].setDPIasociado(clientes[i].getDPI());
+						
+						cout<<"*Ingrese el dia\n->";
+						cin.clear();
+						cin>>dia;		
+						libros[j].setDia(dia);
+						
+						cout<<"*Ingrese el mes\n->";
+						cin.clear();
+						cin>>mes;		
+						libros[j].setMes(mes);
+						
+						cout<<"*Ingrese el anio\n->";
+						cin.clear();
+						cin>>anio;		
+						libros[j].setAnio(anio);
+						
+						cout<<"*Prestamo registrado correctamente"<<endl;
+						
+						encontrado2=true;
+					}
+					
+				}
+				
+			}else{
+				cout<<"*Usted ya rento un libro, no puede tomar prestado mas...\n";
+				encontrado2=true;
+			}
+			encontrado=true;	
+			
+		}
+	}
+	
+	if(!encontrado){
+		cout<<"*El cliente con dpi "<<DPIBuscar<<" No existe."<<endl<<endl;
+	}
+	
+	if(!encontrado2){
+		cout<<"*El libro con isbn "<<ISBNBuscar<<" No existe."<<endl<<endl;
 	}
 	
 	system("pause");
