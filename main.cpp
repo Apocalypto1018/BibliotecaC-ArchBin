@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "cliente.h"
+#include "libro.h"
 
 using namespace std;
 
@@ -13,9 +14,18 @@ void borrarCliente();
 
 void catalogoLibro();
 void agregarNuevoLibro();
+void listaDeTodosLosLibrosOcupados();
+void listaDeTodosLosLibrosDisponibles();
+void modificarLibroPorISBN();
+void borrarLibro();
 
-Cliente clientes[200];
+Cliente clientes[100];
+Libro libros[300];
 int nClientes=0;
+int nLibros=0;
+
+int vLeliminados[100];
+int cVEliminados=0;
 
 int main(){
 	int salir=0, opc=0;
@@ -50,6 +60,11 @@ int main(){
 			
 			case 2:{
 				catalogoLibro();
+				break;
+			}
+			
+			case 3:{
+				
 				break;
 			}
 			
@@ -211,7 +226,6 @@ void modificarClientePorDPI(){
 	
 	string nombre;
 	string apellido;
-	string dpi;
 	string ISBNasociado;
 	
 	int opc;
@@ -220,18 +234,13 @@ void modificarClientePorDPI(){
 	
 	cout<<"*Ingrese el dpi del cliente a modificar\n->";
 	cin.clear();
-	cin>>dpi;
+	cin>>dpiBuscar;
 	
 	system("cls");
 	
 	for(int i=0;i<nClientes;i++){
 		if(dpiBuscar==clientes[i].getDPI()){
 
-			//DPI
-			cout<<"*Ingrese el DPI del cliente\n->";
-			cin.clear();
-			cin>>dpi;
-			clientes[i].setDPI(dpi);
 			//nombre
 			cout<<"*Ingrese el NOMBRE del cliente\n->";
 			cin.clear();
@@ -257,7 +266,7 @@ void modificarClientePorDPI(){
 	}
 	
 	if(!encontrado){
-		cout<<"*El cliente con dpi "<<dpi<<" No existe."<<endl<<endl;
+		cout<<"*El libro con dpi "<<dpiBuscar<<" No existe."<<endl<<endl;
 	}
 	
 	system("pause");
@@ -280,15 +289,23 @@ void borrarCliente(){
 		if(dpiBuscar==clientes[i].getDPI()){
 			
 			clientes[i].~Cliente();
-			
+			cout<<"*El cliente ha sido eliminado correctamente"<<endl;
 			encontrado=true;
 
 		}
 	}
 	
+	if(!encontrado){
+		cout<<"*El cliente con dpi "<<dpiBuscar<<" No existe."<<endl<<endl;
+	}
+	
+	system("pause");
+	system("cls");
+	
 }
 
 void catalogoLibro(){
+	
 	int opc=0;
 	int salir=0;
 	
@@ -298,8 +315,8 @@ void catalogoLibro(){
 		cout<<"*Ingrese 1 para alta"<<endl<<endl;
 		cout<<"*Ingrese 2 para baja"<<endl<<endl;
 		cout<<"*Ingrese 3 para modificar libro"<<endl<<endl;
-		cout<<"*Ingrese 4 para ver todos los libros registrados"<<endl<<endl;
-		cout<<"*Ingrese 5 para ver buscar un libro por ISBN"<<endl<<endl;
+		cout<<"*Ingrese 4 para ver todos los libros disponibles"<<endl<<endl;
+		cout<<"*Ingrese 5 para ver todos los libros ocupados"<<endl<<endl;
 		cout<<"*Ingrese 0 para SALIR\n->";
 		cin.clear();
 		cin>>opc;
@@ -319,22 +336,22 @@ void catalogoLibro(){
 			}
 			
 			case 2:{
-				//borrarLibro();
+				borrarLibro();
 				break;
 			}
 			
 			case 3:{
-				//modificarLibroPorISBN();
+				modificarLibroPorISBN();
 				break;
 			}
 			
 			case 4:{
-				//listaDeTodosLosLibrosDisponibles();
+				listaDeTodosLosLibrosDisponibles();
 				break;
 			}
 			
 			case 5:{
-				//listaDeTodosLosLibrosOcupados();
+				listaDeTodosLosLibrosOcupados();
 				break;
 			}
 			
@@ -350,26 +367,129 @@ void catalogoLibro(){
 
 void agregarNuevoLibro(){
 	
-	string nombre;
-	string apellido;
-	string dpi;
+	string ISBN;
+	string titulo;
 
-	//DPI
-	cout<<"*Ingrese el DPI del cliente\n->";
+	//ISBN
+	cout<<"*Ingrese el ISBN del LIBRO\n->";
 	cin.clear();
-	cin>>dpi;
-	clientes[nClientes].setDPI(dpi);
-	//nombre
-	cout<<"*Ingrese el NOMBRE del cliente\n->";
-	cin.clear();
-	cin>>nombre;
-	clientes[nClientes].setNombre(nombre);
-	//apellido
-	cout<<"*Ingrese el APPELLIDO del cliente\n->";
-	cin.clear();
-	cin>>apellido;
-	clientes[nClientes].setApellido(apellido);
+	cin>>ISBN;
+	libros[nLibros].setISBN(ISBN);
 	
-	nClientes++;
+	//titulo
+	cout<<"*Ingrese el TITULO del LIBRO\n->";
+	cin.clear();
+	cin>>titulo;
+	libros[nLibros].setTitulo(titulo);
+	
+	nLibros++;
+}
+
+void listaDeTodosLosLibrosOcupados(){
+	
+	for(int i=0;i<nLibros;i++){
+		if(libros[nLibros].disponible()==1){
+			cout<<"#Libro: "<<i+1<<endl;
+			cout<<"*ISBN: "<<libros[i].getISBN()<<endl;
+			cout<<"*Titulo: "<<libros[i].getTitulo()<<endl;
+		}
+	}
+	
+	system("pause");
+	system("cls");
+}
+
+void borrarLibro(){
+	
+	string ISBNBuscar;
+	
+	bool encontrado=false;
+	
+	cout<<"*Ingrese el ISBN del libro a eliminar\n->";
+	cin.clear();
+	cin>>ISBNBuscar;
+	
+	system("cls");
+	
+	for(int i=0;i<nLibros;i++){
+		if(ISBNBuscar==libros[i].getISBN()){
+			
+			libros[i].~Libro();
+			
+			vLeliminados[cVEliminados]=i;
+			cVEliminados++;
+			
+			cout<<"*El libro se ha borrado con exito\n";
+			encontrado=true;
+
+		}
+	}
+	
+	if(!encontrado){
+		cout<<"*El libro con isbn "<<ISBNBuscar<<" No existe."<<endl<<endl;
+	}
+	
+	system("pause");
+	system("cls");
+}
+
+void listaDeTodosLosLibrosDisponibles(){
+	
+	for(int i=0;i<nLibros;i++){
+		if(libros[nLibros].disponible()!=1){
+			cout<<"#Libro: "<<i+1<<endl;
+			cout<<"*ISBN: "<<libros[i].getISBN()<<endl;
+			cout<<"*Titulo: "<<libros[i].getTitulo()<<endl;
+		}
+	}
+	
+	system("pause");
+	system("cls");
+}
+
+void modificarLibroPorISBN(){
+	string ISBNBuscar;
+	
+	string titulo;
+	
+	int opc;
+	
+	bool encontrado=false;
+	
+	cout<<"*Ingrese el ISBN del libro a modificar\n->";
+	cin.clear();
+	cin>>ISBNBuscar;
+	
+	system("cls");
+	
+	for(int i=0;i<nLibros;i++){
+		if(ISBNBuscar==libros[i].getISBN()){
+
+			//titulo
+			cout<<"*Ingrese el NOMBRE del cliente\n->";
+			cin.clear();
+			cin>>titulo;
+			libros[i].setTitulo(titulo);
+			
+			//DPI
+			cout<<"*Ingrese el 1 para dejar el DPI como esta, o 0 para indicar vacio por defecto\n->";
+			cin.clear();
+			cin>>opc;
+			
+			if(opc==0){
+				libros[i].setDPIasociado("");
+			}
+			
+			encontrado=true;
+
+		}
+	}
+	
+	if(!encontrado){
+		cout<<"*El cliente con dpi "<<ISBNBuscar<<" No existe."<<endl<<endl;
+	}
+	
+	system("pause");
+	system("cls");
 }
 
