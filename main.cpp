@@ -19,11 +19,12 @@ void modificarLibroPorISBN();
 
 void registrarPrestamo();
 
+void devolverLibro();
+
 Cliente clientes[100];
 Libro libros[300];
 int nClientes=0;
 int nLibros=0;
-
 
 int main(){
 	int salir=0, opc=0;
@@ -63,6 +64,11 @@ int main(){
 			
 			case 3:{
 				registrarPrestamo();
+				break;
+			}
+			
+			case 4:{
+				devolverLibro();
 				break;
 			}
 			
@@ -347,6 +353,7 @@ void listaDeTodosLosLibrosOcupados(){
 			cout<<"#Libro: "<<i+1<<endl;
 			cout<<"*ISBN: "<<libros[i].getISBN()<<endl;
 			cout<<"*Titulo: "<<libros[i].getTitulo()<<endl;
+			cout<<"*Fecha de Renta: "<<libros[i].getDia()<<"/"<<libros[i].getMes()<<"/"<<libros[i].getAnio()<<endl;
 			cout<<"*DPI de cliente asociado: "<<libros[i].getDPIasociado()<<endl<<endl<<endl;
 		}
 	}
@@ -483,6 +490,68 @@ void registrarPrestamo(){
 	
 	if(!encontrado2){
 		cout<<"*El libro con isbn "<<ISBNBuscar<<" No existe."<<endl<<endl;
+	}
+	
+	system("pause");
+	system("cls");
+}
+
+void devolverLibro(){
+	string isbnBuscar;
+	string dpiBuscar;
+	bool encontrado=false;
+	bool encontrado2=false;
+	
+	cout<<"*Ingrese el isbn de libro a devolver\n->";
+	cin.clear();
+	cin>>isbnBuscar;
+	
+	system("cls");
+	
+	for(int i=0;i<nLibros;i++){
+		
+		if(isbnBuscar==libros[i].getISBN()){
+			
+			if(libros[i].disponible()!=1){
+				
+				cout<<"*Ingrese el dpi del cliente que poseia el libro\n->";
+				cin.clear();
+				cin>>dpiBuscar;
+				
+				for(int j=0;j<nClientes;j++){
+					
+					if(dpiBuscar==clientes[j].getDPI()){
+						
+						if(clientes[j].disponible()!=1){
+							libros[i].setDPIasociado("");
+							libros[i].setDia("");
+							libros[i].setMes("");
+							libros[i].setAnio("");
+							
+							clientes[j].setISBNasociado("");
+					
+							cout<<"*Libro devuelto correctamente"<<endl;
+						}else{
+							cout<<"*El cliente ingresado no solicito el libro prestado..."<<endl;
+						}
+						
+						encontrado2=true;
+					}
+					
+				}
+
+			}else{
+				cout<<"*El libro aun esta en la biblioteca..."<<endl;
+				encontrado=false;
+			}
+			
+			encontrado=true;
+
+		}
+	}
+	
+	if(!encontrado){
+		cout<<"*El libro con isbn "<<isbnBuscar<<" No existe."<<endl<<endl;
 	}
 	
 	system("pause");
